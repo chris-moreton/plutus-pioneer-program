@@ -123,7 +123,7 @@ foo() function, the return value of the following expression is unknown.
 
 We do not know if ``a`` is the same as ``b`` because, in Java, it is
 perfectly possible that some IO happens inside ``foo``. For example,
-there code be code that asks the user to enter input on the console and
+there could be code that asks the user to enter input on the console and
 uses this to compute the return value.
 
 This means that, in order to reason about the code, we need to look
@@ -861,7 +861,7 @@ produces the sum of those *Int*\ s.
 
       foo :: Writer Int -> Writer Int -> Writer Int -> Writer Int
       foo (Writer k xs) (Writer l ys) (Writer m zs) =
-      Writer (K + l + m) $ xs ++ ys ++ zs
+      Writer (k + l + m) $ xs ++ ys ++ zs
 
 In the REPL:
 
@@ -1196,9 +1196,9 @@ complicated.
 .. code:: haskell
 
       foo'' :: Writer Int -> Writer Int -> Writer Int -> Writer Int
-      foo'' x y z = do
-         s <- threeInts x y z
-         tell ["sum: " ++ show s]
+      foo'' x y z = 
+         threeInts x y z >>= \s   ->
+         tell ["sum: " ++ show s] >>
          return s
 
 If you look into the Control.Monad module in the standard Haskell
@@ -1542,7 +1542,7 @@ Next, we use *callEndpoint* to simulate Wallet 1 calling the *give* endpoint, wi
 a value representing the slot that was reached, but, as we are not interested in that value here, we use *void* to ignore it. We then simulate the call to the *grab* endpoint
 by Wallet 2.
 
-Now, we can write a function to call *runEmulatorTraceIO* with out *Trace*.
+Now, we can write a function to call *runEmulatorTraceIO* with our *Trace*.
 
 .. code:: haskell
       
@@ -1619,7 +1619,7 @@ And, we can then run this in the REPL:
 This output is very similar to the output we see in the playground. We can see the Genesis transaction as well as both the *give* and *grab* transactions from the *Trace*. We can also see
 some log output from the contract itself, prefixed with *CONTRACT LOG*.
 
-We can also log from inside the *Trace* monad. We could, for example, lof the result of the final *waitNSlots* call:
+We can also log from inside the *Trace* monad. We could, for example, log the result of the final *waitNSlots* call:
 
 .. code:: haskell
 
