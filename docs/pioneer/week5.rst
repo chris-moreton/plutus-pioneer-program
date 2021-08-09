@@ -211,14 +211,14 @@ symbol have to be in hexadecimal digits?
 
 This is where so-called minting policies come in.
 
-The rule is that, in general, a transaction can't create or delete tokens. Everything that goes in also comes out, with the exception of the fees. There is always a lovelace feel
+The rule is that, in general, a transaction can't create or delete tokens. Everything that goes in also comes out, with the exception of the fees. There is always a lovelace fee
 that has to be paid with each transaction. The fee depends on the size of the transaction and the number of steps that the validation script takes to execute, and the memory
 consumption of the script.
 
 But, if that was the whole story then we could never create native tokens. And this is where minting policies come in, and the relevance of the currency symbol comes in.
 
 The reason that the currency symbol has to consist of hexadecimal digits is that it is actually the hash of a script. And this script is called the minting policy, and if
-we have a transaction where we ant to create native or burn native tokens then, for each native token that we try to create or burn, the currency symbol is looked up. So, the
+we have a transaction where we want to create native or burn native tokens then, for each native token that we try to create or burn, the currency symbol is looked up. So, the
 corresponding script must also be contained in the transaction. And that script is executed along with the other validation scripts.
 
 And, similar to the validation scripts that we have seen so that validate input, the purpose of these minting scripts is to decide whether this transaction has the right to
@@ -229,7 +229,7 @@ All the Ada that exists comes from the Genesis transaction and the total amount 
 
 So we'll look at an example of a minting policy next and will see that it is very similar to a validation script, but not identical.
 
-Before we write out first minting policy, let's briefly recall how validation works.
+Before we write our first minting policy, let's briefly recall how validation works.
 
 When we don't have a public key address, but a script address, and a UTxO that sits at that address, then for any transaction that tries to consume that UTxO, a validation script is run.
 
@@ -409,7 +409,7 @@ The arguments to the *singleton* function are the currency symbol that represent
 We'll skip the *lookups* assignment for the moment, and move onto the *tx* assignment.
 
 One of the main purposes of the *Contract* monad is to construct and submit transactions. The path that the Plutus team has taken to do that is provide a way to specify
-the constraints of the transaction you are defining. The Plutus libraries then take care of constructing the correct transaction (if possible). This is as opposed to being require to specify
+the constraints of the transaction you are defining. The Plutus libraries then take care of constructing the correct transaction (if possible). This is as opposed to being required to specify
 all the inputs and outputs manually, which would be tedious as many requirements, such as sending change back to the sending wallet, are often the same.
 
 These conditions all have names that start with *must*. There are things like *mustSpendScriptOutput*, *mustPayToPublicKey* and all sorts of conditions that can be put 
@@ -625,7 +625,7 @@ We'll take a copy of the Free module, and call it Signed.
 Probably the easiest example of a realistic minting policy is one where the minting and burning of tokens is restricted to transactions that are signed by a specific
 public key hash. That is similar to a central bank, in fiat currencies.
 
-This means that our policies is no longer without parameters. We need the public key hash.  In addition, we are going to need to look at the context, so we can't just ignore it like last time.
+This means that our policy is no longer without parameters. We need the public key hash.  In addition, we are going to need to look at the context, so we can't just ignore it like last time.
 
 We recall that *scriptContextTxInfo* from the context contains a list of all the signatories of the transaction. So, we can use this to see if the required signatory is one
 of them.
@@ -1091,7 +1091,7 @@ There's a function for that.
     Prelude Week05.NFT> :t mustSpendPubKeyOutput
     mustSpendPubKeyOutput :: TxOutRef -> TxConstraints i o
 
-How do we combine the constraints of *mustForgeValue* and *mustSpendPubKeyOutput*? *Contraints* don't form a *Monoid*, but they do form a *Semigroup*, and the difference
+How do we combine the constraints of *mustForgeValue* and *mustSpendPubKeyOutput*? *Constraints* don't form a *Monoid*, but they do form a *Semigroup*, and the difference
 is just that in *Semigroup* we don't have *mempty*, the neutral element. We can still combine them with the *<>* operator.
 
 .. code:: haskell
