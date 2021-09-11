@@ -370,7 +370,7 @@ If a node receives a new transaction, it validates it before accepting it into i
 happens to be a script address, the corresponding script is executed. If the script does not succeed, the transaction is invalid.
 
 The programming language this script is expressed in is called Plutus Core, but you never write Plutus Core by hand. Instead, you write Haskell and that gets compiled
-down to Plutus Core. EVentually there may be other high-level languages such as Solidity, C or Python that can compile down to Plutus Core.
+down to Plutus Core. Eventually there may be other high-level languages such as Solidity, C or Python that can compile down to Plutus Core.
 
 The task of a script is to say yes or no to whether a transaction can consume an output. 
 

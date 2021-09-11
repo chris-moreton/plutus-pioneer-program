@@ -211,7 +211,7 @@ symbol have to be in hexadecimal digits?
 
 This is where so-called minting policies come in.
 
-The rule is that, in general, a transaction can't create or delete tokens. Everything that goes in also comes out, with the exception of the fees. There is always a lovelace feel
+The rule is that, in general, a transaction can't create or delete tokens. Everything that goes in also comes out, with the exception of the fees. There is always a lovelace fee
 that has to be paid with each transaction. The fee depends on the size of the transaction and the number of steps that the validation script takes to execute, and the memory
 consumption of the script.
 
