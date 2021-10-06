@@ -610,7 +610,7 @@ is advisable to set up a Nix shell from the main Plutus repository at
 which can also be used to compile the example contracts.
 
 `There are detailed notes on how to do this
-here <https://www.evernote.com/shard/s426/client/snv?noteGuid=b34acc67-c94b-fc64-9350-398a8f6fc6ec&noteKey=7e6b84c9501e9949eef2cadf6e35eaff&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs426%2Fsh%2Fb34acc67-c94b-fc64-9350-398a8f6fc6ec%2F7e6b84c9501e9949eef2cadf6e35eaff&title=Installation>`__.
+here <https://gist.github.com/AriFordsham/cec64463286d267307cedbfc51077679>`__.
 
 This will setup your environment with the dependencies necessary to
 compile the sample contracts.
