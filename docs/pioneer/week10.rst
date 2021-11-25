@@ -203,7 +203,7 @@ Uniswap in Plutus
 
 .. figure:: img/pic__00156.png
 
-Code for Uniswap is actually part of the Plutus repository and it is in the plutus-usecases library, split into four modules that are imported by the
+Code for Uniswap is actually part of the Plutus repository and it is in the [`plutus-use-cases` library](https://github.com/input-output-hk/plutus/tree/547e22a975d9b688ad2121f56e63691bead661cc/plutus-use-cases), split into four modules that are imported by the
 Plutus.Contracts.Uniswap module - OnChain, OffChain, Types and Pool.
 
 So as the names suggest, OnChain contains the on-chain validation, OffChain contains the off-chain contracts, Types contains common types, and 
