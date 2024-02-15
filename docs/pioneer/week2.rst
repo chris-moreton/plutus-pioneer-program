@@ -729,7 +729,7 @@ whereas ``>>=`` accesses the wrapped value and passes it to the next action.
 Now we can try it out in the playground. After adding the new code and clicking ``Simulate`` you will notice that the old scenario has gone. That
 is because the endpoints have changed and the old scenario is no longer valid.
 
-Let's set up a scenario that uses just two wallets. Wallet one is going to give 3 Ada oo the contract, and wallet 2 is going to try to grab them, but 
+Let's set up a scenario that uses just two wallets. Wallet one is going to give 3 Ada to the contract, and wallet 2 is going to try to grab them, but 
 this time, wallet 2 will need to pass in a value which will be used to construct the redeemer.
 
 For our first attempt, we will add the wrong redeemer value, in this case 100.
