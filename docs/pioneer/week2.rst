@@ -395,7 +395,7 @@ And, we can also turn the validator into a script address, which is the script's
 .. code:: haskell
 
       scrAddress :: Ledger.Address
-      scrAddress = ScriptAddress valHash
+      scrAddress = scriptAddress validator
 
 Now we have a script address represented as ``scrAddress``.
 
