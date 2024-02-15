@@ -1419,7 +1419,7 @@ So, let's try out *runEmulatorTrace*. Recall that, as well as and *EmulatorConfi
 If you run this in the REPL you will get a crazy amount of data output to the console, even though we are not doing anything with the trace. If you want to make it useful, you must
 somehow filter all this data down to something that sensible, and aggregate it in some way.
 
-Luckily, there are other functions as well as *runEmulatorTrace*. One of them is *runEmulatorTraceIo* which runs the emulation then outputs the trace in a nice form on the screen.
+Luckily, there are other functions as well as *runEmulatorTrace*. One of them is *runEmulatorTraceIO* which runs the emulation then outputs the trace in a nice form on the screen.
 
 .. code:: haskell
 
