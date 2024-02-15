@@ -198,7 +198,7 @@ Here *Play* is where the second player moves and, as an argument, it has a *Game
 by revealing their nonce, and the nonce is represented by the *ByteString* argument. We don't need to include the move for the *Reveal*, as they will only reveal if they
 have won, and we know what move makes them win.
 
-*ClaimFirst* is when the first player claims back the stake in the even that the second player does not make a move by the play deadline. *ClaimSecond* is for the 
+*ClaimFirst* is when the first player claims back the stake in the event that the second player does not make a move by the play deadline. *ClaimSecond* is for the 
 case when the first player does not reveal by the reveal deadline.
 
 We then have our *lovelaces* helper function which we have used in other scripts, which gets the number of lovelaces held in a *Value*.
@@ -263,7 +263,7 @@ give us the datum.
         Nothing -> traceError "game output datum not found"
         Just d  -> d
         
-The *checkNonce* function is for the case where the first player as won and wants to prove it by revealing their nonce. The first argument is hash that was original sent, 
+The *checkNonce* function is for the case where the first player as won and wants to prove it by revealing their nonce. The first argument is hash that was originally sent, 
 the second argument is the nonce that is being revealed. 
 
 For the *GameChoice*-typed parameter, we will be passing in the move made by player 2. This should be the same as the move made by player 1, and this is what this function will determine using the hash and the nonce.
@@ -554,7 +554,7 @@ We then calculate the hash that we need to send as our disguised move.
             c    = fpChoice fp
             bs   = sha2_256 $ fpNonce fp `concatenate` if c == Zero then bsZero else bsOne
 
-We then submit the transaction and wait as usual. The constraints are very simple. We just need to create a UTxI with the datum of our move (nothing yet for the second player), and the value *v* we defined above.
+We then submit the transaction and wait as usual. The constraints are very simple. We just need to create a UTxO with the datum of our move (nothing yet for the second player), and the value *v* we defined above.
 
 .. code:: haskell
 
@@ -611,7 +611,7 @@ We must put an additional constraint that the transaction must be submitted befo
                     void $ awaitTxConfirmed $ txId ledgerTx'
                     logInfo @String "victory"
 
-If the second player moved and won, there is nothing for use to do.
+If the second player moved and won, there is nothing for us to do.
 
 .. code:: haskell
 
@@ -744,7 +744,7 @@ for us to do.
     case m' of
         Nothing             -> logInfo @String "first player won"
 
-However, if we do find the UTxO, it means the first player didn't reveal, which means that either they decided not to play, probably because they lost. In any case, we 
+However, if we do find the UTxO, it means the first player didn't reveal, which means that they decided not to play, probably because they lost. In any case, we 
 can now claim the winnings.   
 
 Our constraints are that we must spend the UTxO that we found after the deadline has passed, and we must hand back the NFT to the first player.
@@ -768,7 +768,7 @@ If we didn't find the NFT, then there is nothing for use to do.
     
             _ -> logInfo @String "no running game found"            
 
-That is all the code we need for the two on-chain contracts.
+That is all the code we need for the two off-chain contracts.
 
 To make them more accessible, we define two *Endpoint*\s, one for the first player, and one for the second. And then we define a contract 
 called *endpoints* which offers a choice between these two *Endpoint*\s, and recursively calls itself.
@@ -924,7 +924,7 @@ While the first wallet is waiting, the second wallet kicks in and finds the UTxO
     Slot 00005: *** CONTRACT LOG: "made second move: Zero"
 
 The first player realizes that they have won, and so must reveal. And we see in the final balances that Wallet 1 does indeed have the NFT back and it also has
-almost 5 ada more than it started with. The difference is, of course, due to transaction fees. And the second wallet has a little more than 5 ada less.
+almost 5 ada more than it started with. The difference is, of course, due to transaction fees. And the second wallet has just over 5 ada less than it started with.
 
 .. code:: haskell
     
@@ -1040,13 +1040,13 @@ transitions.
 
 .. figure:: img/week07__00014.png
 
-If we look again at how our games works, then we can consider it to be a state machine.
+If we look again at how our game works, then we can consider it to be a state machine.
 
 .. figure:: img/week07__00016.png
 
 The initial state would be [Hash], where the first player has made the move.
 
-From the initial state, there are two possible transitions. One where Bob plays, and the other where Bob does not player and Alice can reclaim.
+From the initial state, there are two possible transitions. One where Bob plays, and the other where Bob does not play and Alice can reclaim.
 
 In the diagram, all the nodes correspond to states, and all the arrows correspond to transitions.
 
@@ -1063,7 +1063,7 @@ A StateMachine has two type parameters, *s* and *i*, which stand for state and i
 
 .. figure:: img/week07__00017.png
 
-It is a record type with four fields. Probably the most important one is *smTransition*, which defines which transitions can move which states which other states.
+It is a record type with four fields. Probably the most important one is *smTransition*, which defines exactly which transitions can be used to move from one state to another and under what conditions (constraints).
 
 The *State s* type is basically the datum. It consists of the state itself and a value. Remember that the state of the state machine is represented by a UTxO, which has 
 a datum and a value.
@@ -1080,10 +1080,10 @@ The first component of the tuple specifies additional constraints that the trans
 code.
 
 We then have a function *setFinal* which is predicated on the state which tells us whether it is a final state or not. Final states are special in that the resulting 
-*State* from the *setTransition* function must have no value attached to it, and the output does not get produced. The machine ends there.
+*State* from the *smTransition* function must have no value attached to it, and the output does not get produced. The machine ends there.
 
-The function *smCheck* is very similar to the *setTransition* function. It gets the datum, the redeemer and the context and returns a bool. 
-It provides additional checks that can't be expressed by the *TxConstraints* in *setTransition*.
+The function *smCheck* is very similar to the *smTransition* function. It gets the datum, the redeemer and the context and returns a bool. 
+It provides additional checks that can't be expressed by the *TxConstraints* in *smTransition*.
 
 Finally, *smThreadToken* allows us to identify the UTxO which represents the current state. This is in the even that there us more than one UTxO sitting at the address
 of the state machine. It uses the same trick that we have seen before of using an NFT sitting in the value of the correct UTxO. You could, however, always return *Nothing* 
@@ -1497,7 +1497,7 @@ Now, we are only interested in the *TypedScriptTxOut* parameter, which we assign
     
 As before we have the two cases. Either the second player has moved, or they haven't moved.
 
-If they haven't moved, we must reclaim. Earlier we had lots of code to setup the lookups and constraints that we needed. How we only need one line, and the important 
+If they haven't moved, we must reclaim. Earlier we had lots of code to setup the lookups and constraints that we needed. Now we only need one line, and the important 
 function here is *runStep*, which creates and submits a transaction that will transition the state machine.
 
 It takes as input the client and the redeemer. It then returns a *TransitionResult*, which we are not using in this example, but basically encodes whether it succeeded
@@ -1505,9 +1505,9 @@ or failed.
 
 .. figure:: img/week07__00024.png
 
-Which means, that we can use *runStep* with just the client and redeemer to replace all the lookups, the constraints, the transaction submissions and the waiting.
+Which means that we can use *runStep* with just the client and redeemer to replace all the lookups, the constraints, the transaction submissions and the waiting.
 
-The way it works it that the *transition* function is that all the necessary constraints have been defined as part of the state machine.
+This works because in the *transition* function we have already defined all the necessary constraints as part of the state machine architecture.
 
 .. code:: haskell
     
