@@ -291,7 +291,7 @@ The *ownInput* function returns the *TxOut* that the script is trying to consume
 different context, such as a minting context, so this eventuality will not occur for us. The *findOwnInput* function is provided by Plutus and will, given the context, 
 find the relevant input. The *txInInfoResolved* function gets the *TxOut* from the *TxInInfo*.
 
-The *inputHashToken* function checks that the token is present. It uses the *assetClassValueOf* function to look for the NFT within the *ownInput* response.
+The *inputHasToken* function checks that the token is present. It uses the *assetClassValueOf* function to look for the NFT within the *ownInput* response.
 
 .. code:: haskell
 
@@ -323,7 +323,7 @@ a helper function.
 
     traceIfFalse "operator signature missing" (txSignedBy info $ oOperator oracle)
 
-The next thing to check is that the output datum. We know that the value can change, but we need to check that it is at least of the correct type.
+The next thing to check is that the output datum is valid. We know that the value can change, but we need to check that it is at least of the correct type.
 
 .. code:: haskell
 
@@ -468,7 +468,7 @@ Here is the type of the *forgeContract* function shown in the REPL.
     
 The important part starts towards the end, where the first parameter - of type *PubKeyHash* - is defined. This is the hash of the public key of the recipient of the NFT.
 
-The *forgeContract* function provides more general functionality than our previous NFT contract. It allows is to generate multiple NFTs in one go. It will create a currency symbol that can only be used one, similar 
+The *forgeContract* function provides more general functionality than our previous NFT contract. It allows is to generate multiple NFTs in one go. It will create a currency symbol that can only be used once, similar 
 to our NFT from last time, so there can only be one minting transaction. But for the one currency symbol, you can mint various tokens in the same transaction, with 
 various token names and in various quantities. The second parameter allows us to define these token names and quantities.
 
@@ -493,7 +493,7 @@ a constraint on the *e* parameter.
 
 Unfortunately *Text* doesn't implement *AsCurrencyError*.
 
-Luckily there is a function that can helper
+Luckily there is a function that can help us:
 
 .. code:: haskell
 
@@ -552,7 +552,7 @@ Now we have minted our NFT and it has currency symbol *cs*. And now we can const
         , oAsset    = AssetClass (opSymbol op, opToken op)
         }
 
-The reason that *opSymbol* and *opToken* are defined separately in the *OracleParams* type *op* is just that this makes is easier when we are using the playground.
+The reason that *opSymbol* and *opToken* are defined separately in the *OracleParams* type *op* is just that this makes it easier when we are using the playground.
 
 Updating the Oracle
 +++++++++++++++++++
@@ -614,7 +614,7 @@ For the case where there is no element, we use the _ case to represent all other
 If, however, we have found the UTxO, then, as we already have its id and transaction, we just need to find its *Integer* value. This part could still go wrong. Even 
 though we have found the correct UTxO, there could be some corrupt data in it for whatever reason.
 
-We use the *oracleValue* function that we used also in validation. This function takes a *TxOut* parameter followed by a second parameter is a function, which, given a datum hash will return the associated datum.
+We use the *oracleValue* function that we used also in validation. This function takes a *TxOut* parameter followed by a second parameter, also a function, which given a datum hash, will return the associated datum.
 
 In the off-chain code, we can use the following function parameter
 
@@ -624,7 +624,7 @@ In the off-chain code, we can use the following function parameter
 
 Here, *txData* is a field of the transaction and it is a map from datum hashes to datums. We get the transaction from *txOutTxTx o*.
 
-If this all succeeds, when will return the triple (oref, o, x), where x is the *Integer* value of the oracle.
+If this all succeeds, it will return the triple (oref, o, x), where x is the *Integer* value of the oracle.
 
 Now that we have written the *findOracle* function we can look at the *updateOracle* function.
 
@@ -827,7 +827,7 @@ We'll start with a helper function called *price*, which, given a number of love
     price :: Integer -> Integer -> Integer
     price lovelace exchangeRate = (lovelace * exchangeRate) `divide` 1000000
     
-The next helper function, *lovelaces*, combines to functions from the Plutus libraries to extract a number of lovelace from a *Value* type.
+The next helper function, *lovelaces*, combines two functions from the Plutus libraries to extract a number of lovelace from a *Value* type.
 
 .. code:: haskell
 
@@ -882,7 +882,7 @@ the oracle or anything else - the seller can just get back their lovelace.
 
 The more interesting case is the second one, where we check two conditions. 
 
-Firstly, there must be two inputs - the oracle and the swap UTxO. All additional inputs (the buyer's funds) must be public key inputs. This is because we don't want to worry about interference with other smart contracts.
+Firstly, there must be two script inputs - the oracle and the swap UTxO. All additional inputs (the buyer's funds) must be public key inputs. This is because we don't want to worry about interference with other smart contracts.
 
 Secondly, we want to check that the seller gets paid.
 
@@ -1404,7 +1404,7 @@ function *txOutValue* . *txOutTxOut*.
 The *Map.elems* function ignores the keys and just gives us the values. And, as we saw before, *mconcat*, when given a *Semigroup* or *Monoid* type, will combine the 
 list of values into one value.
 
-So *v* is not the sum of all the values of all the UTxOs that we own. Our *ownFunds* function is a contract that has a return type of *Value*, we return *v*.
+So *v* is now the sum of all the values of all the UTxOs that we own. Our *ownFunds* function is a contract that has a return type of *Value*, we return *v*.
 
 The function *ownFunds'* is a variation that, instead of returning the value, permanently tells it.
 
@@ -1582,7 +1582,7 @@ Next, we use Wallet 2 to execute the *checkOracle* function which we saw earlier
 
     void $ activateContractWallet (Wallet 2) $ checkOracle oracle
 
-We then initialize the oracle to an exchange rate of 1.5 Ada, and wait for 3 slots.
+We then initialize the oracle to an exchange rate of 1.5 USD, and wait for 3 slots.
 
 .. code:: haskell
 
@@ -1623,6 +1623,8 @@ the first affordable slot. It will then pay USD Token for it. The amount paid wi
     void $ Emulator.waitNSlots 3    
 
 Now, Wallet 1 updates the oracle value to 1.7. This also results in the accumulated fees (1 Ada) being paid to Wallet 1.
+
+.. code:: haskell
 
     callEndpoint @"update" h1 1_700_000
     void $ Emulator.waitNSlots 3
@@ -1877,7 +1879,7 @@ We need one more tiny module, which is basically just a type definition. It is s
         pretty = viaShow
     
 The idea is that it reifies the contract instances that we want to run. We have various contracts, and we want to have a data type where each value of the data type 
-corresponds to a contact that we eventually want to run.
+corresponds to a contract that we eventually want to run.
 
 The *Init* constructor will be used to setup an environment where there is a USD Token available and where the wallets have an initial supply of those.
 
@@ -2102,7 +2104,7 @@ Now we need the currency symbol. This is an example of how we get information ou
 
     cs <- waitForLast cidInit
 
-The function *cidInit* uses a function from the *Simulator* monad called *waitForState*, which takes a contract instance and a predicate. The predicate gets a 
+The function *waitForLast* uses a function from the *Simulator* monad called *waitForState*, which takes a contract instance and a predicate. The predicate gets a 
 JSON expression and returns a *Maybe a*.
 
 .. code:: haskell
@@ -2418,7 +2420,7 @@ Here, we are just giving a simple console interface, so we didn't bother with gr
             s <- getLine
             maybe readCommand return $ readMaybe s
 
-The idea is to take a command from the console and the call the appropriate endpoint.
+The idea is to take a command from the console and call the appropriate endpoint.
 
 .. code:: haskell
 
