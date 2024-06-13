@@ -1091,7 +1091,7 @@ There's a function for that.
     Prelude Week05.NFT> :t mustSpendPubKeyOutput
     mustSpendPubKeyOutput :: TxOutRef -> TxConstraints i o
 
-How do we combine the constraints of *mustForgeValue* and *mustSpendPubKeyOutput*? *Contraints* don't form a *Monoid*, but they do form a *Semigroup*, and the difference
+How do we combine the constraints of *mustForgeValue* and *mustSpendPubKeyOutput*? *Constraints* don't form a *Monoid*, but they do form a *Semigroup*, and the difference
 is just that in *Semigroup* we don't have *mempty*, the neutral element. We can still combine them with the *<>* operator.
 
 .. code:: haskell
