@@ -79,7 +79,7 @@ providing the data, at a minimum they would have to pay fees to create the UTxO.
 
 So, let's say that the oracle provider determines a fee of 1 ADA that has to be paid each time the oracle is used.
 
-In this example, that would mean that the person wanting to by the ADA would have to pay 175 USD to the seller of the ADA,
+In this example, that would mean that the person wanting to buy the ADA would have to pay 175 USD to the seller of the ADA,
 and 1 ADA to the oracle.
 
 What will the transaction look like?
