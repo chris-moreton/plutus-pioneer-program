@@ -443,7 +443,7 @@ In this case, in order to validate a transaction that forges value, the nodes th
 But, the currency symbol is only the hash of the policy script. In order to run the script itself, it must be included in the transaction. Which means that, in the 
 construction step of the transaction, when the algorithm see the *mustForgeValue* constraint, it knows it has to attach the corresponding policy script to the transaction.
 
-In order to tell the algorithm where the policy script is, we can give it hints, and these are the lookups. The are a variety of lookups that can be used - you can give 
+In order to tell the algorithm where the policy script is, we can give it hints, and these are the lookups. There are a variety of lookups that can be used - you can give 
 UTxOs, validator scripts, and, as we do here, you can give monetary policy scripts.
 
 In our case, the only thing we need to supply as a lookup is the policy that we defined earlier in the script.
