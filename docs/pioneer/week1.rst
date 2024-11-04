@@ -300,7 +300,7 @@ The value of the UTxO is the NFT, and the datum is *Nothing*. Later on it will b
 
 In the real blockchain you can't have a UTxO that just contains native tokens, they always have to be accompanied by some Ada, but for simplicity we will ignore that here.
 
-Not let's say that Bob wants to bid 100 Ada.
+Now, let's say that Bob wants to bid 100 Ada.
 
 .. figure:: img/iteration2/pic__00001.png
    :alt: Bob Makes a Bid
